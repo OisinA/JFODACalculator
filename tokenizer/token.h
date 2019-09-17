@@ -6,7 +6,7 @@ typedef enum TokenType {
 	RPAREN,
 };
 
-struct Token {
+typedef struct Token {
 	char val[128];
     	TokenType tokenType;
 };
