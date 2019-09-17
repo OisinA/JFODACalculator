@@ -1,4 +1,4 @@
-enum TokenType {
+typedef enum TokenType {
 	INTEGER,
 	FLOAT,
 	OPERATOR,
@@ -8,5 +8,5 @@ enum TokenType {
 
 struct Token {
 	char val[128];
-    	enum TokenType tokenType;
+    	TokenType tokenType;
 };
