@@ -5,6 +5,7 @@
 #include "token.h"
 
 int isoperator(char c);
+int writeTokensToFile(void);
 
 // Create a global token struct variable.
 Token token;
@@ -57,6 +58,21 @@ int main(int argc, char **argv) {
     printf("\nTOKEN VAL: %s\nTOKEN TYPE: %u\n", token.val, token.tokenType);
     tokens[i] = token;
 }
+}
+
+int writeTokensToFile() {
+    // Write to a file.
+    FILE* data;
+    if ( (data = fopen("tokens.bin", "wb")) == NULL )
+    {
+        printf("There was an error when opening file\n");
+        return 1;   
+    }
+
+     // Write the tokens to the file.
+    fwrite(tokens, sizeof(Token) * 100, 1, data);
+    fclose(data);
+    
 }
 
 int isoperator(char c) {
