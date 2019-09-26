@@ -26,10 +26,6 @@ int main(int argc, char **argv) {
 
     char c = expr[i];
 
-    // Create a token struct. It's assigned the token type of operator for now, until I 
-    // patch this.
-    Token token = {c, OPERATOR};
-
     // check if it's a number
     if (isdigit(c)){
       token.tokenType = INTEGER;
@@ -54,12 +50,17 @@ int main(int argc, char **argv) {
     else {
       continue;
     }
+
+    strcpy( token.val, &c );
     printf("\n### NEW TOKEN ###: %c\n", c);
     printf("\nTOKEN VAL: %s\nTOKEN TYPE: %u\n", token.val, token.tokenType);
     tokens[i] = token;
 }
 }
 
+// Write the tokens stored in the tokens array to a binary file.
+// This binary file will contain all tokens tokenized from user input
+// and can be read to retrieve the tokens by another file/module.
 int writeTokensToFile() {
     // Write to a file.
     FILE* data;
@@ -75,6 +76,8 @@ int writeTokensToFile() {
     
 }
 
+// Check if a character is an operator. 
+// Returns 1 if true, 0 if false.
 int isoperator(char c) {
   if (c == '+' || c == '-' || c == '/' || c == '*') {
     return 1;
