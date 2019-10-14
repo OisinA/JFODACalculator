@@ -19,15 +19,21 @@ int main(int argc, char **argv) {
   scanf("%[^\n]s", expr);
 
   size_t i = 0;
+
+  // index into the tokens array.
+  size_t tokens_i = 0;
   int str_len = strlen( expr );
-  
+
   // Iterate over every char in the string
   for (i = 0; i < str_len; i++){
 
     char c = expr[i];
 
+    printf("\nOn character %c\n", c);
+
     // check if it's a number
-    if (isdigit(c)){
+    if (isdigit(c)) {
+      printf("Is a digit.");
       token.tokenType = INTEGER;
     }
 
@@ -54,8 +60,11 @@ int main(int argc, char **argv) {
     strcpy( token.val, &c );
     printf("\n### NEW TOKEN ###: %c\n", c);
     printf("\nTOKEN VAL: %s\nTOKEN TYPE: %u\n", token.val, token.tokenType);
-    tokens[i] = token;
+    tokens[tokens_i] = token;
+    tokens_i += 1;
 }
+
+writeTokensToFile();
 }
 
 // Write the tokens stored in the tokens array to a binary file.
@@ -67,16 +76,34 @@ int writeTokensToFile() {
     if ( (data = fopen("tokens.bin", "wb")) == NULL )
     {
         printf("There was an error when opening file\n");
-        return 1;   
+        return 1;
     }
 
      // Write the tokens to the file.
     fwrite(tokens, sizeof(Token) * 100, 1, data);
     fclose(data);
-    
+
+    testReadingOfTokens();
 }
 
-// Check if a character is an operator. 
+void testReadingOfTokens() {
+    printf("Testing Output Values ...");
+
+    // read in the data from the file
+    Token tokendata[100];
+
+    FILE *readFile = fopen("tokens.bin", "rb");
+
+    fread(tokendata, sizeof(Token), sizeof(tokendata), readFile);
+
+    int j;
+    for (j = 0; j < 3; j++) {
+      Token token = tokendata[j];
+      printf("\n### OUPUT VAL ###: %d VAL: %s\n", token.tokenType, token.val);
+    }
+}
+
+// Check if a character is an operator.
 // Returns 1 if true, 0 if false.
 int isoperator(char c) {
   if (c == '+' || c == '-' || c == '/' || c == '*') {
@@ -84,4 +111,3 @@ int isoperator(char c) {
   }
   return 0;
 }
-
