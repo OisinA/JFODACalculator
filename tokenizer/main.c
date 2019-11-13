@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include "token.h"
+#include "token_readwrite.h"
 
 int isoperator(char c);
 int writeTokensToFile(void);
@@ -25,16 +26,29 @@ int main(int argc, char **argv) {
   int str_len = strlen( expr );
 
   // Iterate over every char in the string
-  for (i = 0; i < str_len; i++){
 
+  while (i < str_len){
+    char nums[10] = { NULL };
     char c = expr[i];
-
-    printf("\nOn character %c\n", c);
-
+    int k = 0;
     // check if it's a number
     if (isdigit(c)) {
-      printf("Is a digit.");
       token.tokenType = INTEGER;
+      size_t m = 0;
+
+      while (isdigit(expr[i])) {
+
+        c = expr[i];
+
+        // convert the char to an int
+        nums[m] = c;
+
+        i++;
+        m++;
+      };
+
+      i--;
+
     }
 
     // check if it's an operand
@@ -54,54 +68,30 @@ int main(int argc, char **argv) {
     }
     // Disregard this character; it is neither an operator or num
     else {
+      i++;
       continue;
     }
 
-    strcpy( token.val, &c );
-    printf("\n### NEW TOKEN ###: %c\n", c);
-    printf("\nTOKEN VAL: %s\nTOKEN TYPE: %u\n", token.val, token.tokenType);
+    if (token.tokenType == INTEGER) {
+      char b = k;
+      strcpy(token.val, &nums);
+    }
+
+    else {
+      strcpy( token.val, &c );
+    }
+
+    printf("\nEXPORTED TOKEN: %s %u", token.val, token.tokenType);
+
     tokens[tokens_i] = token;
     tokens_i += 1;
+    i++;
 }
 
 writeTokensToFile();
 }
 
-// Write the tokens stored in the tokens array to a binary file.
-// This binary file will contain all tokens tokenized from user input
-// and can be read to retrieve the tokens by another file/module.
-int writeTokensToFile() {
-    // Write to a file.
-    FILE* data;
-    if ( (data = fopen("tokens.bin", "wb")) == NULL )
-    {
-        printf("There was an error when opening file\n");
-        return 1;
-    }
 
-     // Write the tokens to the file.
-    fwrite(tokens, sizeof(Token) * 100, 1, data);
-    fclose(data);
-
-    testReadingOfTokens();
-}
-
-void testReadingOfTokens() {
-    printf("Testing Output Values ...");
-
-    // read in the data from the file
-    Token tokendata[100];
-
-    FILE *readFile = fopen("tokens.bin", "rb");
-
-    fread(tokendata, sizeof(Token), sizeof(tokendata), readFile);
-
-    int j;
-    for (j = 0; j < 3; j++) {
-      Token token = tokendata[j];
-      printf("\n### OUPUT VAL ###: %d VAL: %s\n", token.tokenType, token.val);
-    }
-}
 
 // Check if a character is an operator.
 // Returns 1 if true, 0 if false.
