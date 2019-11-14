@@ -3,6 +3,32 @@
 #include "../isa/isa.h"
 #include "stack.h"
 
+#define OPERATE(x, y, z, op)\
+  ({switch (op) {\
+  case ADD:\
+    z = y + x;\
+    break;\
+  case SUB:\
+    z = y - x;\
+    break;\
+  case MUL:\
+    z = y * x;\
+    break;\
+  case EXP:\
+    z = pow(y, x);\
+    break;\
+  case DIV:\
+    if (x == 0) {\
+      printf("Error, divide by 0");\
+      exit(1);\
+    }\
+    z = y / x;\
+    break;\
+  default:\
+    printf("Error, unrecognized operator\n");\
+    exit(1);\
+}})
+
 // Tries to push value from instruction bytes onto the stack
 StackNode* pushValue(int type, char* instructions, int size, StackNode* stack) {
   if (size < sizeof(int)) {
@@ -26,47 +52,31 @@ StackNode* operate(int operator, StackNode* stack) {
     exit(1);
   }
   Data data2 = pop(&stack);
-  if (data1.type != data2.type) {
-    printf("Error, cannot operate on Float with int\n");
-    exit(1);
-  }
   Data data = {data1.type, 0};
-  float value1 = 0.0;
-  float value2 = 0.0;
-  float result = 0.0;
-  if (data1.type == 1) {
-    value1 = *(float*)&data1.value;
-    value2 = *(float*)&data2.value;
-    data.value = *(int*)&result;
+  if (data1.type == 0 && data2.type == 0) {
+    int value1 = data1.value;
+    int value2 = data2.value;
+    int result;
+    OPERATE(value1, value2, result, operator);
+    data.value = result;
   } else {
-    value1 = (float)data1.value;
-    value2 = (float)data2.value;
+    float value1;
+    float value2;
+    float result;
+    if (data1.type == 1) {
+      value1 = *(float*)&data1.value;
+    } else {
+      value1 = (float)data1.value;
+    }
+    if (data2.type == 1) {
+      value2 = *(float*)&data2.value;
+    } else {
+      value2 = (float)data2.value;
+    }
+    OPERATE(value1, value2, result, operator);
+    data.value = *(int*)&result;
+    data.type = 1;
   }
-  switch (operator) {
-    case ADD:
-      result = value2 + value1;
-      break;
-    case SUB:
-      result = value2 - value1;
-      break;
-    case MUL:
-      result = value2 * value1;
-      break;
-    case EXP:
-      result = pow(value2, value1);
-      break;
-    case DIV:
-      if (value1 == 0) {
-        printf("Error, divide by 0");
-        exit(1);
-      }
-      result = value2 / value1;
-      break;
-    default:
-      printf("Error, unrecognized operator\n");
-      exit(1);
-  }
-  data.value = *(int*)&result;
   push(&stack, data);
   return stack;
 }
@@ -74,7 +84,7 @@ StackNode* operate(int operator, StackNode* stack) {
 int main(int argc, char* argv[]) {
   FILE* fp = fopen(argv[1], "r");  // Open file name specified in command line
   fseek(fp, 0, SEEK_END);          // Seek to the end of the file
-  int size = ftell(fp);  // Store the current location as the size of the file
+  int size = ftell(fp); // Store the current location as the size of the file
   char instructions[size];           // Create an array of
                                      // Instructions
   rewind(fp);                        // Rewind to the start of the file
