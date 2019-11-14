@@ -28,7 +28,6 @@
     printf("Error, unrecognized operator\n");\
     exit(1);\
 }})
-
 // Tries to push value from instruction bytes onto the stack
 StackNode* pushValue(int type, char* instructions, int size, StackNode* stack) {
   if (size < sizeof(int)) {

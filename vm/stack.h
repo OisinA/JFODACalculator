@@ -1,6 +1,5 @@
 #ifndef __VM_STACK__
 #define __VM_STACK__
-
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,5 +43,4 @@ Data pop(StackNode** stack) {
   Data popped = temp->data;
   free(temp);
   return popped;
-}
 #endif
