@@ -26,14 +26,20 @@ int main() {
 
     // fclose(fptr);
 
-    remove("output");
+    // read in the data from the file
 
-    Token t = {"40.5", FLOAT};
-    Token t1 = {"10.2", FLOAT};
-    Token t2 = {"*", OPERATOR};
-    Token t3 = {"5.0", FLOAT};
-    Token t4 = {"/", OPERATOR};
-    Token tokens[] = {t, t1, t2, t3, t4};
+    FILE *readFile = fopen("tokens.bin", "rb");
+    fseek(readFile, 0L, SEEK_END);
+    int sz = ftell(readFile) / sizeof(Token);
+    fseek(readFile, 0L, SEEK_SET);
+
+    Token tokens[sz];
+
+    fread(tokens, sizeof(Token), sizeof(tokens), readFile);
+
+    fclose(readFile);
+
+    remove("output");
 
     // Loop through each token, one by one.
     for(int i = sizeof(tokens) / sizeof(tokens[0]); i >= 0; i--) {
