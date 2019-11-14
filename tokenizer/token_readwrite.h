@@ -1,7 +1,8 @@
 // Write the tokens stored in the tokens array to a binary file.
 // This binary file will contain all tokens tokenized from user input
 // and can be read to retrieve the tokens by another file/module.
-int writeTokensToFile(void) {
+
+int writeTokensToFile(Token tokens[]) {
     // Write to a file.
     FILE* data;
     if ( (data = fopen("tokens.bin", "wb")) == NULL )

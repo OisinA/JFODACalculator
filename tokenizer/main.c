@@ -6,7 +6,6 @@
 #include "token_readwrite.h"
 
 int isoperator(char c);
-int writeTokensToFile(void);
 
 // Create a global token struct variable.
 Token token;
@@ -88,7 +87,7 @@ int main(int argc, char **argv) {
     i++;
 }
 
-writeTokensToFile();
+writeTokensToFile(tokens);
 }
 
 
