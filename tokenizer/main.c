@@ -30,13 +30,16 @@ int main(int argc, char **argv) {
     char nums[10] = { NULL };
     char c = expr[i];
     int k = 0;
+
     // check if it's a number
     if (isdigit(c)) {
       token.tokenType = INTEGER;
       size_t m = 0;
 
-      while (isdigit(expr[i])) {
-
+      while (isdigit(expr[i]) || expr[i] == '.') {
+        if (expr[i] == '.') {
+          token.tokenType = FLOAT;
+        }
         c = expr[i];
 
         // convert the char to an int
@@ -65,13 +68,18 @@ int main(int argc, char **argv) {
     else if (c == ')') {
       token.tokenType = RPAREN;
     }
+
+    else if (c == '.') {
+      i++;
+
+    }
     // Disregard this character; it is neither an operator or num
     else {
       i++;
       continue;
     }
 
-    if (token.tokenType == INTEGER) {
+    if (token.tokenType == INTEGER || token.tokenType == FLOAT) {
       char b = k;
       strcpy(token.val, &nums);
     }

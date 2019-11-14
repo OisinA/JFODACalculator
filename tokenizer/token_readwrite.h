@@ -2,6 +2,10 @@
 // This binary file will contain all tokens tokenized from user input
 // and can be read to retrieve the tokens by another file/module.
 
+
+int writeTokensToFile(Token tokens[]);
+void testReadingOfTokens();
+
 int writeTokensToFile(Token tokens[]) {
     // Write to a file.
     FILE* data;
@@ -11,7 +15,7 @@ int writeTokensToFile(Token tokens[]) {
         return 1;
     }
 
-     // Write the tokens to the file.
+    // Write the tokens to the file.
     fwrite(tokens, sizeof(Token) * 100, 1, data);
     fclose(data);
 
