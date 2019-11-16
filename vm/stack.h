@@ -43,4 +43,5 @@ Data pop(StackNode** stack) {
   Data popped = temp->data;
   free(temp);
   return popped;
+}
 #endif
