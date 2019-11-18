@@ -14,7 +14,7 @@ struct Stack {
 };
 
 // Stack Operations
-struct Stack* createStack( unsigned capacity ) {
+struct Stack* create_stack( unsigned capacity ) {
 	struct Stack* stack = (struct Stack*) malloc(sizeof(struct Stack));
 
 	if (!stack)
@@ -31,7 +31,7 @@ struct Stack* createStack( unsigned capacity ) {
 }
 
 // check if stack is empty
-int isEmpty(struct Stack* stack) {
+int is_empty(struct Stack* stack) {
 	return stack->top == -1 ;
 }
 
@@ -42,7 +42,7 @@ Token peek(struct Stack* stack) {
 
 // pop item off top of stack
 Token pop(struct Stack* stack) {
-	if (!isEmpty(stack))
+	if (!is_empty(stack))
 		return stack->array[stack->top--];
 	return '$';
 }
@@ -54,7 +54,7 @@ void push(struct Stack* stack, Token item) {
 
 
 // check if the given character is operand
-int isOperand(Token token) {
+int is_operand(Token token) {
 	if (token.tokenType == OPERATOR){
 		return 1;
 	}
@@ -62,7 +62,7 @@ int isOperand(Token token) {
 }
 
 // returns importance of a given operator
-int Prec(Token token) {
+int operator(Token token) {
 	switch (token.val) {
 		case '+':
 		case '-':
@@ -80,17 +80,17 @@ int Prec(Token token) {
 
 
 // converts infix to postfix
-int infixToPostfix(Token* tokens) {
+int infix_to_postfix(Token* tokens) {
 	int i, k;
 
 	// creates a stack of capacity equal to tokenression size
-	struct Stack* stack = createStack(strlen(tokens));
+	struct Stack* stack = create_stack(strlen(tokens));
 	if(!stack)
 		return -1 ;
 
 	for (i = 0, k = -1; tokens[i]; ++i) {
 		// if the character is an operand, add it to output.
-		if (isOperand(tokens[i]))
+		if (is_operand(tokens[i]))
 			tokens[++k] = tokens[i];
 
 		// if the character is an ‘(‘, push it to the stack.
@@ -100,15 +100,15 @@ int infixToPostfix(Token* tokens) {
 		// if the character is an ‘)’, pop and output from the stack
 		// until an ‘(‘ is encountered.
 		else if (tokens[i] == ')') {
-			while (!isEmpty(stack) && peek(stack) != '(')
+			while (!is_empty(stack) && peek(stack) != '(')
 				tokens[++k] = pop(stack);
-			if (!isEmpty(stack) && peek(stack) != '(')
+			if (!is_empty(stack) && peek(stack) != '(')
 				return -1;
 			else
 				pop(stack);
 		}
 		else {
-			while (!isEmpty(stack) && Prec(tokens[i]) <= Prec(peek(stack)))
+			while (!is_empty(stack) && operator(tokens[i]) <= operator(peek(stack)))
 				tokens[++k] = pop(stack);
 			push(stack, tokens[i]);
 		}
@@ -116,7 +116,7 @@ int infixToPostfix(Token* tokens) {
 	}
 
 	// pop all the operators from the stack
-	while (!isEmpty(stack))
+	while (!is_empty(stack))
 		tokens[++k] = pop(stack);
 
 	tokens[++k] = '\0';
@@ -128,6 +128,6 @@ int infixToPostfix(Token* tokens) {
 int main() {
 	testReadingOfTokens()
 	//Token infix = testReadingOfTokens()
-	// infixToPostfix(infix);
+	// infix_to_postfix(infix);
 	return 0;
 }
