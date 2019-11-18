@@ -1,3 +1,7 @@
+// Code Generator
+// Takes an input of tokens in postfix form and outputs instructions into a file in byte format.
+// Author: Oisin Aylward
+
 #include <stdio.h>
 #include <string.h>
 #include "../tokenizer/token.h"
@@ -13,19 +17,6 @@ char output[128] = {};
 int outputIndex = 0;
 
 int main() {
-    // FILE *fptr = fopen("sample", "r");
-    // if(fptr == NULL) {
-    //     printf("Could not open file!");
-    //     return 1;
-    // }
-
-    // char text[1024];
-
-    // fgets(text, 1024, fptr);
-    // printf("%s", &text);
-
-    // fclose(fptr);
-
     // read in the data from the file
 
     FILE *readFile = fopen("tokens.bin", "rb");
@@ -86,6 +77,7 @@ int main() {
     return 0;
 }
 
+// print takes in a string and prints it, with a trailing new line character
 void print(char* string) {
     printf("%s%c", string, 10);
 }
@@ -95,23 +87,23 @@ void _emit(char byte) {
     outputIndex = outputIndex + 1;
 }
 
+// emit takes a byte array and its size and outputs it to an output file
 void emit(char byte[], int size) {
     FILE* file = fopen("output", "ab");
     fwrite(byte, 1, size, file);
     for(int byteIndex = 0; byteIndex < size * sizeof(char); byteIndex++) {
-        // if(output[byteIndex] == 0) {
-        //     continue;
-        // }
         printf("%hhx%c", byte[byteIndex], 10);
     }
 }
 
+// toInt converts a string to an integer
 int toInt(char* string) {
     int i;
     sscanf(string, "%d", &i);
     return i;
 }
 
+// toFloat converts a string to a float
 float toFloat(char* string) {
     float i;
     sscanf(string, "%f", &i);
