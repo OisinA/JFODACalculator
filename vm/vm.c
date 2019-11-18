@@ -3,6 +3,7 @@
 #include "../isa/isa.h"
 #include "stack.h"
 
+Data executeInstructions(char instructions[], int size);
 #define OPERATE(x, y, z, op)\
   ({switch (op) {\
   case ADD:\
@@ -28,6 +29,7 @@
     printf("Error, unrecognized operator\n");\
     exit(1);\
 }})
+
 // Tries to push value from instruction bytes onto the stack
 StackNode* pushValue(int type, char* instructions, int size, StackNode* stack) {
   if (size < sizeof(int)) {
@@ -81,6 +83,10 @@ StackNode* operate(int operator, StackNode* stack) {
 }
 
 int main(int argc, char* argv[]) {
+  if (argc <= 1) {
+    printf("Please specify the input file\n");
+    return 1;
+  }
   FILE* fp = fopen(argv[1], "r");  // Open file name specified in command line
   fseek(fp, 0, SEEK_END);          // Seek to the end of the file
   int size = ftell(fp); // Store the current location as the size of the file
@@ -88,6 +94,16 @@ int main(int argc, char* argv[]) {
                                      // Instructions
   rewind(fp);                        // Rewind to the start of the file
   fread(instructions, size, 1, fp);  // Read the binary from the file
+  Data data = executeInstructions(instructions, size);
+  if (data.type == 0) {
+    printf("%ld\n", data.value);
+  } else {
+    printf("%f\n", *(float*)&data.value);
+  }
+  return 0;
+}
+
+Data executeInstructions(char instructions[], int size) {
   StackNode* stack = NULL;
   for (int i = 0; i < size; i++) {
     switch (instructions[i]) {
@@ -95,7 +111,7 @@ int main(int argc, char* argv[]) {
       case PUSHFLOAT:
         stack =
             pushValue(instructions[i], instructions + i + 1,
-                      sizeof(instructions) - (sizeof(char) * (i + 1)), stack);
+              (size - (i + 1)) * (sizeof(char)), stack);
         i += sizeof(int);
         break;
       case ADD:
@@ -112,11 +128,5 @@ int main(int argc, char* argv[]) {
   }
 
   Data data = pop(&stack);
-  if (data.type == 0) {
-    printf("%ld\n", data.value);
-  } else {
-    printf("%f\n", *(float*)&data.value);
-  }
-
-  return 0;
+  return data;
 }
