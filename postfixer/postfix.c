@@ -36,19 +36,19 @@ int isEmpty(struct Stack* stack) {
 }
 
 // check item at top of stack
-char peek(struct Stack* stack) {
+Token peek(struct Stack* stack) {
 	return stack->array[stack->top];
 }
 
 // pop item off top of stack
-char pop(struct Stack* stack) {
+Token pop(struct Stack* stack) {
 	if (!isEmpty(stack))
 		return stack->array[stack->top--];
 	return '$';
 }
 
 // push item onto top of stack
-void push(struct Stack* stack, char item) {
+void push(struct Stack* stack, Token item) {
 	stack->array[++stack->top] = item;
 }
 
@@ -122,6 +122,7 @@ int infixToPostfix(Token* tokens) {
 	tokens[++k] = '\0';
 	printf( "%s", tokens );
 }
+
 
 // main function for testing
 int main() {
