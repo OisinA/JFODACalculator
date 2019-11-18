@@ -13,7 +13,23 @@ Token token;
 // Array of tokens. Upper limit set to 100 for now.
 Token tokens[100];
 
+const char *TokenNames[] = {"INTEGER", "FLOAT", "OPERATOR", "LPAREN", "RPAREN"};
+
 int main(int argc, char **argv) {
+  // FILE *fp;
+  // char buff[255];
+
+  // fp = fopen("test.txt", "r");
+  // fscanf(fp, "%s", buff);
+  // printf("1 : %s\n", buff );
+
+  // fgets(buff, 255, (FILE*)fp);
+  // printf("2: %s\n", buff );
+   
+  // fgets(buff, 255, (FILE*)fp);
+  // printf("3: %s\n", buff );
+  // fclose(fp);
+
   char expr[100];
   printf("Enter an expression: \n");
   scanf("%[^\n]s", expr);
@@ -27,8 +43,10 @@ int main(int argc, char **argv) {
   // Iterate over every char in the string
 
   while (i < str_len){
+
     char nums[10] = { NULL };
     char c = expr[i];
+
     int k = 0;
 
     // check if it's a number
@@ -69,10 +87,6 @@ int main(int argc, char **argv) {
       token.tokenType = RPAREN;
     }
 
-    else if (c == '.') {
-      i++;
-
-    }
     // Disregard this character; it is neither an operator or num
     else {
       i++;
@@ -80,15 +94,16 @@ int main(int argc, char **argv) {
     }
 
     if (token.tokenType == INTEGER || token.tokenType == FLOAT) {
-      char b = k;
       strcpy(token.val, &nums);
     }
 
+    // Token is either a parenthesis or an operator
     else {
+      c = expr[i];
       strcpy( token.val, &c );
     }
 
-    printf("\nEXPORTED TOKEN: %s %u", token.val, token.tokenType);
+    printf("\nEXPORTED TOKEN -> %s %s", token.val, TokenNames[token.tokenType]);
 
     tokens[tokens_i] = token;
     tokens_i += 1;
@@ -97,8 +112,6 @@ int main(int argc, char **argv) {
 
 writeTokensToFile(tokens);
 }
-
-
 
 // Check if a character is an operator.
 // Returns 1 if true, 0 if false.
