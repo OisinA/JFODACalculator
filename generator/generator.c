@@ -60,11 +60,6 @@ void print(char* string) {
     printf("%s%c", string, 10);
 }
 
-void _emit(char byte) {
-    output[outputIndex] = byte;
-    outputIndex = outputIndex + 1;
-}
-
 // emit takes a byte array and its size and outputs it to an output file
 void emit(char byte[], int size) {
     FILE* file = fopen("output", "ab");
