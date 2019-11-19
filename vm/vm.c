@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "../isa/isa.h"
 #include "stack.h"
+#include "vm.h"
 
 Data executeInstructions(char instructions[], int size);
 #define OPERATE(x, y, z, op)\
@@ -42,6 +43,7 @@ StackNode* pushValue(int type, char* instructions, int size, StackNode* stack) {
   return stack;
 }
 
+// Performs the given operator on the stack
 StackNode* operate(int operator, StackNode* stack) {
   if (isEmpty(stack)) {
     printf("Error, Not enough items in stack for operation\n");
@@ -82,27 +84,7 @@ StackNode* operate(int operator, StackNode* stack) {
   return stack;
 }
 
-int main(int argc, char* argv[]) {
-  if (argc <= 1) {
-    printf("Please specify the input file\n");
-    return 1;
-  }
-  FILE* fp = fopen(argv[1], "r");  // Open file name specified in command line
-  fseek(fp, 0, SEEK_END);          // Seek to the end of the file
-  int size = ftell(fp); // Store the current location as the size of the file
-  char instructions[size];           // Create an array of
-                                     // Instructions
-  rewind(fp);                        // Rewind to the start of the file
-  fread(instructions, size, 1, fp);  // Read the binary from the file
-  Data data = executeInstructions(instructions, size);
-  if (data.type == 0) {
-    printf("%ld\n", data.value);
-  } else {
-    printf("%f\n", *(float*)&data.value);
-  }
-  return 0;
-}
-
+// Executes the instructions given and returns the data result
 Data executeInstructions(char instructions[], int size) {
   StackNode* stack = NULL;
   for (int i = 0; i < size; i++) {
@@ -120,6 +102,7 @@ Data executeInstructions(char instructions[], int size) {
       case DIV:
       case EXP:
         stack = operate(instructions[i], stack);
+        printf("%d", top(stack).value);
         break;
       default:
         printf("Error, unrecognized instruction %d\n", instructions[i]);
