@@ -1,3 +1,6 @@
+//Implementation of VMs stack
+//Author: Arthan Jansen
+
 #include "stack.h"
 
 // Create a stack node with given data

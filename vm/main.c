@@ -1,5 +1,9 @@
+// Main file to read input files and run VM
+//Author: Arthan Jansen
+
 #include "vm.h"
 
+// Main file for the VM. Reads in instructions from the output file. Runs instructions on VM.
 int main(int argc, char* argv[]) {
   FILE* fp = fopen("output", "r");  // Open file name specified in command line
   fseek(fp, 0, SEEK_END);          // Seek to the end of the file
