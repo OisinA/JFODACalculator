@@ -1,9 +1,13 @@
+//VM functions
+//Author: Arthan Jansen
+
 #include <math.h>
 #include <stdio.h>
 #include "../isa/isa.h"
 #include "stack.h"
 #include "vm.h"
 
+// Executes the given instructions in a stack based Virtual Machine. Returns the Data struct of the final result
 Data executeInstructions(char instructions[], int size);
 #define OPERATE(x, y, z, op)\
   ({switch (op) {\

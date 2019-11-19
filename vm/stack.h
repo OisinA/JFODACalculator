@@ -1,3 +1,6 @@
+//Header file for the VMs stack
+//Author: Arthan Jansen
+
 #ifndef __VM_STACK__
 #define __VM_STACK__
 #include <stddef.h>

@@ -1,3 +1,6 @@
+# Makefile for project as a whole
+#Author: Arthan Jansen
+
 .PHONY = build
 
 CC = gcc

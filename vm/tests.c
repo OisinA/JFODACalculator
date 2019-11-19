@@ -1,3 +1,6 @@
+//Tests for the vm
+//Author: Arthan Jansen
+
 #include <ctap.h>
 #include "vm.h"
 #include "../isa/isa.h"

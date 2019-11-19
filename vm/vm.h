@@ -1,3 +1,6 @@
+//Header file for vm functions
+//Author: Arthan Jansen
+
 #ifndef __VM__
 #define __VM__
 
