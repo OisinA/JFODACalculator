@@ -17,8 +17,6 @@ int main() {
 
     fclose(readFile);
 
-    printf("%ld %c", sz, 10);
-
     remove("output");
 
     generate(tokens, 2);
