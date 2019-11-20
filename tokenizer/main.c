@@ -90,7 +90,6 @@ int main(int argc, char **argv) {
     // Token is either a parenthesis or an operator
     else {
       c = expr[i];
-      printf("token val %s", token.val);
       strcpy( token.val, &c );
     }
 
@@ -125,9 +124,6 @@ int readFile() {
   if( fgets (expr, 60, fp) == NULL ) {
     puts("No numbers found.");
   }
-
-writeTokensToFile(tokens);
-}
 
   fclose(fp);
 
