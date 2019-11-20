@@ -6,6 +6,8 @@
 #include "token_readwrite.h"
 
 int isoperator(char c);
+int readFile();
+void exportToken();
 
 // Create a global token struct variable.
 Token token;
@@ -15,39 +17,23 @@ Token tokens[100];
 
 const char *TokenNames[] = {"INTEGER", "FLOAT", "OPERATOR", "LPAREN", "RPAREN"};
 
+char expr[255];
+
+// index into the tokens array.
+size_t tokens_i = 0;
+
 int main(int argc, char **argv) {
-  // FILE *fp;
-  // char buff[255];
-
-  // fp = fopen("test.txt", "r");
-  // fscanf(fp, "%s", buff);
-  // printf("1 : %s\n", buff );
-
-  // fgets(buff, 255, (FILE*)fp);
-  // printf("2: %s\n", buff );
-   
-  // fgets(buff, 255, (FILE*)fp);
-  // printf("3: %s\n", buff );
-  // fclose(fp);
-
-  char expr[100];
-  printf("Enter an expression: \n");
-  scanf("%[^\n]s", expr);
+  readFile();
 
   size_t i = 0;
 
-  // index into the tokens array.
-  size_t tokens_i = 0;
   int str_len = strlen( expr );
 
   // Iterate over every char in the string
+  while (i < str_len) {
 
-  while (i < str_len){
-
-    char nums[10] = { NULL };
+    char nums[128] = { 0 };
     char c = expr[i];
-
-    int k = 0;
 
     // check if it's a number
     if (isdigit(c)) {
@@ -60,7 +46,7 @@ int main(int argc, char **argv) {
         }
         c = expr[i];
 
-        // convert the char to an int
+        // append the char to the nums array
         nums[m] = c;
 
         i++;
@@ -94,7 +80,7 @@ int main(int argc, char **argv) {
     }
 
     if (token.tokenType == INTEGER || token.tokenType == FLOAT) {
-      strcpy(token.val, &nums);
+      strcpy(token.val, nums);
     }
 
     // Token is either a parenthesis or an operator
@@ -103,14 +89,41 @@ int main(int argc, char **argv) {
       strcpy( token.val, &c );
     }
 
-    printf("\nEXPORTED TOKEN -> %s %s", token.val, TokenNames[token.tokenType]);
-
-    tokens[tokens_i] = token;
-    tokens_i += 1;
+    exportToken();
     i++;
 }
 
 writeTokensToFile(tokens);
+}
+
+void exportToken() {
+  printf("\nEXPORTED TOKEN -> %s %s", token.val, TokenNames[token.tokenType]);
+
+    tokens[tokens_i] = token;
+    tokens_i += 1;
+}
+
+int readFile() {
+  // Create a file pointer
+  FILE *fp;
+
+  // Open the file called test.txt
+  fp = fopen("test.txt" , "r");
+
+  // If the file does not exist, an error should be generated.
+  if(fp == NULL) {
+    perror("Error: Could not open the file.");
+    return(-1);
+  }
+
+  // File exists, get the first line
+  if( fgets (expr, 60, fp) == NULL ) {
+    puts("No numbers found.");
+  }
+
+  fclose(fp);
+
+  return 0;
 }
 
 // Check if a character is an operator.
