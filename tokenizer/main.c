@@ -8,9 +8,10 @@
 #include <stdlib.h>
 #include "token.h"
 #include "token_readwrite.h"
+#include "io.c"
 
 int isoperator(char c);
-int readFile();
+char* readFile();
 void exportToken();
 
 // Create a global token struct variable.
@@ -21,13 +22,16 @@ Token tokens[100];
 
 const char *TokenNames[] = {"INTEGER", "FLOAT", "OPERATOR", "LPAREN", "RPAREN"};
 
-char expr[255];
-
 // index into the tokens array.
 size_t tokens_i = 0;
 
 int main(int argc, char **argv) {
-  readFile();
+  char* expr = readFile();
+
+  if (!expr) {
+    printf("Error: Couldn't parse file");
+    return -1;
+  }
 
   size_t i = 0;
 
@@ -37,6 +41,8 @@ int main(int argc, char **argv) {
   while (i < str_len) {
 
     char nums[128] = { 0 };
+
+    // get the current character in the expression.
     char c = expr[i];
 
     // check if it's a number
@@ -84,50 +90,31 @@ int main(int argc, char **argv) {
     }
 
     if (token.tokenType == INTEGER || token.tokenType == FLOAT) {
+      // assign the val to the struct
       strcpy(token.val, nums);
     }
-
     // Token is either a parenthesis or an operator
     else {
-      c = expr[i];
       strcpy( token.val, &c );
+      token.val[1] = '\0';
     }
 
     exportToken();
     i++;
+
+    closeFile(expr);
 }
 
 writeTokensToFile(tokens, tokens_i);
 }
 
+// Save the token in the tokens array and increment the current token index
 void exportToken() {
-  printf("\nEXPORTED TOKEN -> %s %s", token.val, TokenNames[token.tokenType]);
 
-    tokens[tokens_i] = token;
-    tokens_i += 1;
-}
+  printf("EXPORTED TOKEN -> %s %s\n", token.val, TokenNames[token.tokenType]);
 
-int readFile() {
-  // Create a file pointer
-  FILE *fp;
-
-  // Open the file called test.txt
-  fp = fopen("test.txt" , "r");
-
-  // If the file does not exist, an error should be generated.
-  if(fp == NULL) {
-    perror("Error: Could not open the file.");
-    return(-1);
-  }
-
-  // File exists, get the first line
-  if( fgets (expr, 60, fp) == NULL ) {
-    puts("No numbers found.");
-  }
-
-  fclose(fp);
-
-  return 0;
+  tokens[tokens_i] = token;
+  tokens_i += 1;
 }
 
 // Check if a character is an operator.
