@@ -1,3 +1,7 @@
+// Main file to tokenize an arithmetical expression
+// Author Name: Silvia O'Dwyer
+// Author Student Number: 117333306
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -93,7 +97,7 @@ int main(int argc, char **argv) {
     i++;
 }
 
-writeTokensToFile(tokens);
+writeTokensToFile(tokens, tokens_i);
 }
 
 void exportToken() {

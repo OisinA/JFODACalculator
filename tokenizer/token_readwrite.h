@@ -1,25 +1,30 @@
+// Header file for reading/writing of tokens
+// Author Name: Silvia O'Dwyer
+// Author Student Number: 117333306
+
+#ifndef __TOKEN_READ_WRITE__
+#define __TOKEN_READ_WRITE__
+
+int writeTokensToFile(Token tokens[], int token_num);
+void testReadingOfTokens();
+
 // Write the tokens stored in the tokens array to a binary file.
 // This binary file will contain all tokens tokenized from user input
 // and can be read to retrieve the tokens by another file/module.
-
-
-int writeTokensToFile(Token tokens[]);
-void testReadingOfTokens();
-
-int writeTokensToFile(Token tokens[]) {
+int writeTokensToFile(Token tokens[], int token_num) {
     // Write to a file.
     FILE* data;
     if ( (data = fopen("tokens.bin", "wb")) == NULL )
     {
-        printf("There was an error when opening file\n");
+        printf("There was an error when opening file.\n");
         return 1;
     }
 
     // Write the tokens to the file.
-    fwrite(tokens, sizeof(Token) * 100, 1, data);
+    fwrite(tokens, sizeof(Token) * token_num, 1, data);
     fclose(data);
 
-    testReadingOfTokens();
+    return 0;
 }
 
 void testReadingOfTokens() {
@@ -45,3 +50,5 @@ void testReadingOfTokens() {
       printf("\n### OUPUT VAL ###: VAL: %s TOKEN TYPE: %d\n", token.val, token.tokenType);
     }
 }
+
+#endif
