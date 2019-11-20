@@ -125,6 +125,9 @@ int readFile() {
     puts("No numbers found.");
   }
 
+writeTokensToFile(tokens);
+}
+
   fclose(fp);
 
   return 0;
