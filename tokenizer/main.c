@@ -90,6 +90,7 @@ int main(int argc, char **argv) {
     // Token is either a parenthesis or an operator
     else {
       c = expr[i];
+      printf("token val %s", token.val);
       strcpy( token.val, &c );
     }
 

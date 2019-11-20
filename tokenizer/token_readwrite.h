@@ -23,8 +23,9 @@ int writeTokensToFile(Token tokens[], int token_num) {
     // Write the tokens to the file.
     fwrite(tokens, sizeof(Token) * token_num, 1, data);
     fclose(data);
-
+    testReadingOfTokens();
     return 0;
+
 }
 
 void testReadingOfTokens() {
