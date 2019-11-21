@@ -1,3 +1,7 @@
+// Code Generator
+// Takes an input of tokens in postfix form and outputs instructions into a file in byte format.
+// Author: Oisin Aylward
+
 #include <ctap.h>
 #include "generator.h"
 #include "../tokenizer/token.h"
