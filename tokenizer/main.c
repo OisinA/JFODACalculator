@@ -7,7 +7,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include "token.h"
-#include "token_readwrite.h"
+#include "token_readwrite.c"
 #include "io.c"
 
 int isoperator(char c);
@@ -41,8 +41,6 @@ int main(int argc, char **argv) {
   while (i < str_len) {
 
     char nums[128] = { 0 };
-
-    // get the current character in the expression.
     char c = expr[i];
 
     // check if it's a number
@@ -90,22 +88,21 @@ int main(int argc, char **argv) {
     }
 
     if (token.tokenType == INTEGER || token.tokenType == FLOAT) {
-      // assign the val to the struct
       strcpy(token.val, nums);
     }
+
     // Token is either a parenthesis or an operator
     else {
+      c = expr[i];
       strcpy( token.val, &c );
       token.val[1] = '\0';
     }
 
     exportToken();
     i++;
+  }
 
-    closeFile(expr);
-}
-
-writeTokensToFile(tokens, tokens_i);
+  writeTokensToFile(tokens, tokens_i);
 }
 
 // Save the token in the tokens array and increment the current token index
