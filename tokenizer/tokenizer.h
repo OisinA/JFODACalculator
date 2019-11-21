@@ -1,6 +1,7 @@
 // Header file for tokenizer
 // Author Name: Silvia O'Dwyer
 // Author Student Number: 117333306
+#include "token.h"
 
 #ifndef __TOKENIZER__
 #define __TOKENIZER__
@@ -32,6 +33,6 @@ void exportToken();
  * *expr: Expression to tokenize
  *  Writes an array of tokens to an output file called tokens.bin
  */
-void tokenize(char *expr);
+Token *tokenize(char *expr);
 
 #endif

@@ -17,12 +17,11 @@ size_t tokens_i = 0;
 // Create a global token struct variable.
 Token token;
 
-// Array of tokens. Upper limit set to 100 for now.
-Token tokens[100];
-
 const char *TokenNames[] = {"INTEGER", "FLOAT", "OPERATOR", "LPAREN", "RPAREN"};
 
-void tokenize(char *expr) {
+Token *tokenize(char *expr) {
+  Token *tokens = malloc(sizeof(Token) * 100);
+
   size_t i = 0;
 
   int str_len = strlen( expr );
@@ -89,7 +88,7 @@ void tokenize(char *expr) {
     }
 
     // Append the token to the tokens array.
-    exportToken();
+    exportToken(tokens);
     i++;
   }
 
@@ -97,8 +96,7 @@ void tokenize(char *expr) {
   writeTokensToFile(tokens, tokens_i);
 }
 
-// Save the token in the tokens array and increment the current token index
-void exportToken() {
+void exportToken(Token *tokens) {
 
   printf("EXPORTED TOKEN -> %s %s\n", token.val, TokenNames[token.tokenType]);
 
