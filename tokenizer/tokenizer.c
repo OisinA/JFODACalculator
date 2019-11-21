@@ -1,3 +1,8 @@
+// File for tokenizer component, which takes an arithmetical expression
+// and writes the array of tokens to a file.
+// Author Name: Silvia O'Dwyer
+// Author Student Number: 117333306
+
 #include "tokenizer.h"
 #include <stdio.h>
 #include <string.h>
@@ -83,10 +88,12 @@ void tokenize(char *expr) {
       token.val[1] = '\0';
     }
 
+    // Append the token to the tokens array.
     exportToken();
     i++;
   }
 
+  // Write the array of tokens to a file.
   writeTokensToFile(tokens, tokens_i);
 }
 
@@ -99,8 +106,6 @@ void exportToken() {
   tokens_i += 1;
 }
 
-// Check if a character is an operator.
-// Returns 1 if true, 0 if false.
 int isoperator(char c) {
   if (c == '+' || c == '-' || c == '/' || c == '*') {
     return 1;

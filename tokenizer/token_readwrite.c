@@ -1,3 +1,7 @@
+// Main file for reading/writing of tokens
+// Author Name: Silvia O'Dwyer
+// Author Student Number: 117333306
+
 #include "token.h"
 #include <stddef.h>
 #include <string.h>

@@ -10,12 +10,15 @@
 #include "io.h"
 
 int main(int argc, char **argv) {
+  // Read the input file
   char* expr = readFile();
 
+  // If the file does not exist, return an error.
   if (!expr) {
     printf("Error: Couldn't parse file");
     return -1;
   }
 
+  // Tokenize the expression
   tokenize(expr);
 }
