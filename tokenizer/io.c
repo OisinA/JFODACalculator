@@ -1,10 +1,8 @@
-#include <stddef.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
-
-char * readFile();
-void closeFile(char*);
+#include<stdio.h>
+#include<stdlib.h>
+#include <stdio.h>
+#include "io.h"
+#include "token.h"
 
 // Read in the file called test.txt and assign
 // this to an array of characters, whose pointer is returned.
