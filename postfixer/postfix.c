@@ -1,70 +1,85 @@
-// standard libs
-#include <stdio.h>
-// #include <string.h>
+#include <limits.h> 
+#include <stdio.h> 
 #include <stdlib.h>
 // local libs
 #include "../tokenizer/token.h"
 #include "../tokenizer/token_readwrite.h"
 
-// Stack used to store postfix tokenression
-struct Stack {
-	int top;
-	unsigned capacity;
-	Token* array;
+
+// A structure to represent a stack 
+struct StackNode { 
+    Token token; 
+    struct StackNode* next; 
 };
 
-// Stack Operations
-struct Stack* create_stack( unsigned capacity ) {
-	struct Stack* stack = (struct Stack*) malloc(sizeof(struct Stack));
+Token null_token;
 
-	if (!stack)
-		return NULL;
+struct StackNode* new_node(Token token) 
+{ 
+    struct StackNode* stack_node = (struct StackNode*)malloc(sizeof(struct StackNode));
+    stack_node->token = token;
+    stack_node->next = NULL;
+    return stack_node;
+} 
 
-	stack->top = -1;
-	stack->capacity = capacity;
-
-	stack->array = (int*) malloc(stack->capacity * sizeof(int));
-
-	if (!stack->array)
-		return NULL;
-	return stack;
+int is_empty(struct StackNode* root) 
+{ 
+    return !root; 
+} 
+  
+void push(struct StackNode** root, Token token) 
+{ 
+    struct StackNode* stack_node = new_node(token); 
+    stack_node->next = *root; 
+    *root = stack_node;
+} 
+  
+Token pop(struct StackNode** root) 
+{ 
+    if (is_empty(*root))
+        return null_token; 
+    struct StackNode* temp = *root; 
+    *root = (*root)->next; 
+    Token popped = temp->token; 
+    free(temp); 
+  
+    return popped;
 }
 
-// check if stack is empty
-int is_empty(struct Stack* stack) {
-	return stack->top == -1 ;
-}
-
-// check item at top of stack
-Token peek(struct Stack* stack) {
-	return stack->array[stack->top];
-}
-
-// pop item off top of stack
-Token pop(struct Stack* stack) {
-	return stack->array[stack->top--];
-}
-
-// push item onto top of stack
-void push(struct Stack* stack, Token item) {
-	stack->array[++stack->top] = item;
-}
+Token peek(struct StackNode* root) 
+{ 
+    if (is_empty(root))
+        return null_token;
+    return root->token; 
+} 
 
 
 // check if the given character is operand
 int is_operand(Token token) {
-	if (token.tokenType == OPERATOR){
+
+	if (token.tokenType == INTEGER || token.tokenType == FLOAT){
 		return 1;
 	}
 	return 0;
 }
 
-// returns importance of a given operator
-int operator(Token token) {
-	if (token.val == '+' || token.val == '-') {
+
+int is_operator(Token token) {
+
+	if (token.tokenType == OPERATOR) {
 		return 1;
 	}
-	if (token.val == '*' || token.val == '/') {
+	return 0;
+}
+
+
+// returns importance of a given operator
+int operator(Token token) {
+
+	if (token.val == "+" || token.val == "-") {
+		return 1;
+	}
+	if (token.val == "*" || token.val == "/") {
 		return 2;
 	}
 
@@ -76,46 +91,57 @@ int operator(Token token) {
 int infix_to_postfix(Token* tokens, int size) {
 	int i, k;
 
-	// creates a stack of capacity equal to tokenression size
-	struct Stack* stack = create_stack(size);
-	if(!stack)
-		return -1 ;
+	Token x;
+
+	// creates a stack
+	struct StackNode* stack = NULL;
 
 	for (i = 0, k = -1; i < size; ++i) {
-		// if the character is an operand, add it to output.
-		if (is_operand(tokens[i]))
+
+		// if the token is an operand, add it to output.
+		if (is_operand(tokens[i])) {
 			tokens[++k] = tokens[i];
+		}
 
-		// if the character is an ‘(‘, push it to the stack.
-		else if (tokens[i].tokenType == LPAREN)
-			push(stack, tokens[i]);
+		// if the token is an ‘(‘, push it to the stack.
+		else if (tokens[i].tokenType == LPAREN) {
+			push(&stack, tokens[i]);
+		}
 
-		// if the character is an ‘)’, pop and output from the stack
+		else if (is_operator(tokens[i])) {
+			x = pop(&stack);
+			while (is_operator(x) && operator(x) >= operator(tokens[i])) {
+				tokens[++k] = x;
+				x = pop(&stack);
+			}
+			push(&stack, x);
+			push(&stack, tokens[i]);
+		}
+		// if the token is an ‘)’, pop and output from the stack
 		// until an ‘(‘ is encountered.
 		else if (tokens[i].tokenType == RPAREN) {
-			while (!is_empty(stack) && peek(stack).tokenType != LPAREN)
-				tokens[++k] = pop(stack);
-			if (!is_empty(stack) && peek(stack).tokenType != LPAREN)
-				return -1;
-			else
-				pop(stack);
+			x = pop(&stack);
+			while (x.tokenType != LPAREN) {
+				tokens[++k] = x;
+				x = pop(&stack);
+			}
 		}
 		else {
-			while (!is_empty(stack) && operator(tokens[i]) <= operator(peek(stack)))
-				tokens[++k] = pop(stack);
-			push(stack, tokens[i]);
+			return -1;
 		}
 
 	}
 
-	// pop all the operators from the stack
-	while (!is_empty(stack))
-		tokens[++k] = pop(stack);
-
-	// tokens[++k] = '\0';
-	printf( "%s", tokens );
+	// pop all the operators from the stackW
+	while (!is_empty(stack)) {
+		x = pop(&stack);
+		tokens[++k] = x;
+	}
+	for (int j = 0; j < size; j++) {
+      Token token = tokens[j];
+      printf("\n### OUPUT VAL ###: VAL: %s TOKEN TYPE: %d\n", token.val, token.tokenType);
+    }
 }
-
 
 
 // main function for testing
@@ -124,22 +150,16 @@ int main() {
     fseek(readFile, 0L, SEEK_END);
     int sz = ftell(readFile) / sizeof(Token);
     fseek(readFile, 0L, SEEK_SET);
-
     Token* tokens = (Token*)malloc(sizeof(Token)*sz);
-
     fread(tokens, sizeof(Token), sizeof(tokens), readFile);
-
     fclose(readFile);
-
-    printf("%ld %c", sz, 10);
-
     remove("output");
 
-    infix_to_postfix(tokens, 3);
+    infix_to_postfix(tokens, 10);
 
     free(tokens);
 
     return 0;
-	//Token infix = testReadingOfTokens()
+	// Token infix = testReadingOfTokens()
 	// infix_to_postfix(infix);
 }
