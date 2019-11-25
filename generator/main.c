@@ -13,7 +13,7 @@ int main() {
     FILE *readFile = fopen("tokens.bin", "rb");
     fseek(readFile, 0L, SEEK_END);
     int sz = ftell(readFile) / sizeof(Token);
-    fseek(readFile, 0L, SEEK_SET);
+    rewind(readFile);
 
     Token* tokens = (Token*)malloc(sizeof(Token)*sz);
 
@@ -23,7 +23,7 @@ int main() {
 
     remove("output");
 
-    generate(tokens, 2);
+    generate(tokens, sz);
 
     free(tokens);
 
