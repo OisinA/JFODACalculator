@@ -12,19 +12,27 @@ int main() {
 
     FILE *readFile = fopen("tokens.bin", "rb");
     fseek(readFile, 0L, SEEK_END);
-    int sz = ftell(readFile) / sizeof(Token);
-    fseek(readFile, 0L, SEEK_SET);
 
+    // Get size of file
+    int sz = ftell(readFile) / sizeof(Token);
+    rewind(readFile);
+
+    // Create array of tokens
     Token* tokens = (Token*)malloc(sizeof(Token)*sz);
 
+    // Read in tokens from file
     fread(tokens, sizeof(Token), sizeof(tokens), readFile);
 
+    // Close the file
     fclose(readFile);
 
+    // Remove an existing output file
     remove("output");
 
-    generate(tokens, 2);
+    // Generate the instructions and ouput to file
+    generate(tokens, sz);
 
+    // Release the memory allocated for tokens
     free(tokens);
 
     return 0;
