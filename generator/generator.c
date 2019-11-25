@@ -46,7 +46,7 @@ void generate(Token tokens[], int size) {
                     emit((char[]){MUL}, 1);
                     break;
                 }
-                if(strcmp(tokens[i].val, "**") == 0) {
+                if(strcmp(tokens[i].val, "^") == 0) {
                     emit((char[]){EXP}, 1);
                     break;
                 }
