@@ -12,21 +12,22 @@
 // Write the tokens stored in the tokens array to a binary file.
 // This binary file will contain all tokens tokenized from user input
 // and can be read to retrieve the tokens by another file/module.
+// returns: an int --> 1 upon an error and 0 upon success.
 int writeTokensToFile(Token tokens[], int token_num) {
     // Write to a file.
     FILE* data;
     if ( (data = fopen("tokens.bin", "wb")) == NULL )
     {
-        printf("There was an error when opening file.\n");
+        printf("There was an error when opening the file.\n");
         return 1;
     }
 
     // Write the tokens to the file.
+
     fwrite(tokens, sizeof(Token) * token_num, 1, data);
     fclose(data);
     testReadingOfTokens();
     return 0;
-
 }
 
 void testReadingOfTokens() {
@@ -42,12 +43,11 @@ void testReadingOfTokens() {
     int j;
 
     fseek(readFile, 0L, SEEK_END);
-    int sz = ftell(readFile);
+    int sz = ftell(readFile) /  sizeof(Token);
 
     fseek(readFile, 0L, SEEK_SET);
-    //printf("Size of file is %i", sz);
 
-    for (j = 0; j < 3; j++) {
+    for (j = 0; j < sz; j++) {
       Token token = tokendata[j];
       printf("\n### OUPUT VAL ###: VAL: %s TOKEN TYPE: %d\n", token.val, token.tokenType);
     }

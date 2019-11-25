@@ -19,7 +19,7 @@ Token token;
 
 const char *TokenNames[] = {"INTEGER", "FLOAT", "OPERATOR", "LPAREN", "RPAREN"};
 
-Token *tokenize(char *expr) {
+Result tokenize(char *expr) {
   Token *tokens = malloc(sizeof(Token) * 100);
 
   size_t i = 0;
@@ -93,9 +93,12 @@ Token *tokenize(char *expr) {
   }
 
   // Write the array of tokens to a file.
-  writeTokensToFile(tokens, tokens_i);
+  Result result = { tokens, tokens_i};
+
+  return result;
 }
 
+// Append the token to the Tokens array.
 void exportToken(Token *tokens) {
 
   printf("EXPORTED TOKEN -> %s %s\n", token.val, TokenNames[token.tokenType]);
@@ -104,9 +107,32 @@ void exportToken(Token *tokens) {
   tokens_i += 1;
 }
 
+// Check if a character is an operator.
+// returns: 1 if an operator, 0 if not.
 int isoperator(char c) {
   if (c == '+' || c == '-' || c == '/' || c == '*' || c == '^') {
     return 1;
   }
   return 0;
+}
+
+// Check if two token arrays are equal.
+int token_array_is_equal(Token *array_one, Token *array_two,
+                    const size_t elem_size, const size_t elem_count) {
+  int is_equal = 0;
+
+  for (int i = 0; i < elem_count; i++) {
+    Token token1 = array_one[i];
+    Token token2 = array_two[i];
+    printf("\nToken1: Val -> %sToken2: Val -> %s", token1.val, token2.val);
+    printf("\nToken1: Type -> %dToken2: Type -> %d", token1.tokenType, token2.tokenType);
+
+    if (strcmp(token1.val, token2.val) != 0 || token1.tokenType != token2.tokenType) {
+      is_equal = 1;
+      break;
+    }
+
+  }
+  return is_equal;
+
 }

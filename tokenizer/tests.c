@@ -6,7 +6,9 @@
 
 #include <ctap.h>
 #include "token_readwrite.h"
-#include "io.c"
+#include "tokenizer.h"
+#include "io.h"
+#include "token.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -25,9 +27,20 @@ TESTS {
 
   // test tokenization
   subtest {
+    char* expr = readFile();
+    // remove new line from expression.
+    strtok(expr, "\n");
 
+    Token correct_tokens[] = {{"(", 3}, {"1.3", 1}, {"+", 2}, {"4.5", 1}, {"*", 2}, {"7", 0}, {")", 4}, {"-", 2}, {"2", 0}};
+
+    // Tokenize the expression
+    Result result = tokenize(expr);
+    Token *tokens = result.tokens;
+    ok(token_array_is_equal(correct_tokens, tokens, sizeof(Token), 9) == 0, "Two array of tokens are equal.");
   }
 }
+
+
 
 // gcc -o test.t tests.c # compile file test.c, generating test.t as executable output.
 // prove ./*.t

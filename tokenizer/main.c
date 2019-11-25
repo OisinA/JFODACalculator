@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include "tokenizer.h"
 #include "io.h"
+#include "token.h"
+#include "token_readwrite.h"
 
 int main(int argc, char **argv) {
   // Read the input file
@@ -20,5 +22,12 @@ int main(int argc, char **argv) {
   }
 
   // Tokenize the expression
-  tokenize(expr);
+  Result result = tokenize(expr);
+
+  Token correct_tokens[] = {{"(", 3}, {"1.3", 1}, {"+", 2}, {"4.5", 1}, {"*", 2}, {"7", 0}, {")", 4}, {"-", 2}, {"2", 0}};
+
+  // Tokenize the expression
+
+  // Write the token array to a file.
+  writeTokensToFile(result.tokens, result.token_num);
 }
