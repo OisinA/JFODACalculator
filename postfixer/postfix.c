@@ -137,6 +137,9 @@ int infix_to_postfix(Token* tokens, int size) {
 		x = pop(&stack);
 		tokens[++k] = x;
 	}
+
+	writeTokensToFile(tokens, size);
+
 	for (int j = 0; j < size; j++) {
       Token token = tokens[j];
       printf("\n### OUPUT VAL ###: VAL: %s TOKEN TYPE: %d\n", token.val, token.tokenType);
@@ -146,20 +149,15 @@ int infix_to_postfix(Token* tokens, int size) {
 
 // main function for testing
 int main() {
-	FILE *readFile = fopen("tokens.bin", "rb");
+    FILE *readFile = fopen("tokens.bin", "rb");
     fseek(readFile, 0L, SEEK_END);
     int sz = ftell(readFile) / sizeof(Token);
-    fseek(readFile, 0L, SEEK_SET);
+    rewind(readFile);
     Token* tokens = (Token*)malloc(sizeof(Token)*sz);
     fread(tokens, sizeof(Token), sizeof(tokens), readFile);
     fclose(readFile);
-    remove("output");
-
-    infix_to_postfix(tokens, 10);
-
+    infix_to_postfix(tokens, sz);
     free(tokens);
 
     return 0;
-	// Token infix = testReadingOfTokens()
-	// infix_to_postfix(infix);
 }
