@@ -105,7 +105,7 @@ void exportToken(Token *tokens) {
 }
 
 int isoperator(char c) {
-  if (c == '+' || c == '-' || c == '/' || c == '*') {
+  if (c == '+' || c == '-' || c == '/' || c == '*' || c == '^') {
     return 1;
   }
   return 0;
