@@ -1,3 +1,8 @@
+// Infix to Postfix converter
+// Author: Michael Forde
+// Student Number: 117392626
+// Extra: DSS, I have a spelling and grammer waver
+
 #include <limits.h> 
 #include <stdio.h> 
 #include <stdlib.h>
@@ -12,8 +17,10 @@ struct StackNode {
     struct StackNode* next; 
 };
 
+// null token to be outputed if no items in stack
 Token null_token;
 
+// node for stack
 struct StackNode* new_node(Token token) 
 { 
     struct StackNode* stack_node = (struct StackNode*)malloc(sizeof(struct StackNode));
@@ -22,11 +29,13 @@ struct StackNode* new_node(Token token)
     return stack_node;
 } 
 
+// check if stack is empty
 int is_empty(struct StackNode* root) 
 { 
     return !root; 
 } 
   
+// pushes an item to the stack
 void push(struct StackNode** root, Token token) 
 { 
     struct StackNode* stack_node = new_node(token); 
@@ -34,6 +43,7 @@ void push(struct StackNode** root, Token token)
     *root = stack_node;
 } 
   
+// pops an iem from the top of the stack
 Token pop(struct StackNode** root) 
 { 
     if (is_empty(*root))
@@ -46,6 +56,7 @@ Token pop(struct StackNode** root)
     return popped;
 }
 
+// also you check the item in the top of the list
 Token peek(struct StackNode* root) 
 { 
     if (is_empty(root))
@@ -54,7 +65,7 @@ Token peek(struct StackNode* root)
 } 
 
 
-// check if the given character is operand
+// check if the given token is operand
 int is_operand(Token token) {
 
 	if (token.tokenType == INTEGER || token.tokenType == FLOAT){
@@ -63,7 +74,7 @@ int is_operand(Token token) {
 	return 0;
 }
 
-
+// check if the given token is a operator
 int is_operator(Token token) {
 
 	if (token.tokenType == OPERATOR) {
@@ -87,15 +98,16 @@ int operator(Token token) {
 }
 
 
-// converts infix to postfix
+// converts postfix tokens from an array of infix tokens
 int infix_to_postfix(Token* tokens, int size) {
+	// initializing some variables
 	int i, k;
-
 	Token x;
 
 	// creates a stack
 	struct StackNode* stack = NULL;
 
+	// loop through all the tokens individually
 	for (i = 0, k = -1; i < size; ++i) {
 
 		// if the token is an operand, add it to output.
@@ -108,6 +120,7 @@ int infix_to_postfix(Token* tokens, int size) {
 			push(&stack, tokens[i]);
 		}
 
+		// if the token is an operator pop the stack until 
 		else if (is_operator(tokens[i])) {
 			x = pop(&stack);
 			while (is_operator(x) && operator(x) >= operator(tokens[i])) {
@@ -117,6 +130,7 @@ int infix_to_postfix(Token* tokens, int size) {
 			push(&stack, x);
 			push(&stack, tokens[i]);
 		}
+
 		// if the token is an ‘)’, pop and output from the stack
 		// until an ‘(‘ is encountered.
 		else if (tokens[i].tokenType == RPAREN) {
@@ -138,26 +152,12 @@ int infix_to_postfix(Token* tokens, int size) {
 		tokens[++k] = x;
 	}
 
+	// write the output to a file
 	writeTokensToFile(tokens, size);
 
+	// prints outputted tokens for debugging
 	for (int j = 0; j < size; j++) {
       Token token = tokens[j];
       printf("\n### OUPUT VAL ###: VAL: %s TOKEN TYPE: %d\n", token.val, token.tokenType);
     }
-}
-
-
-// main function for testing
-int main() {
-    FILE *readFile = fopen("tokens.bin", "rb");
-    fseek(readFile, 0L, SEEK_END);
-    int sz = ftell(readFile) / sizeof(Token);
-    rewind(readFile);
-    Token* tokens = (Token*)malloc(sizeof(Token)*sz);
-    fread(tokens, sizeof(Token), sizeof(tokens), readFile);
-    fclose(readFile);
-    infix_to_postfix(tokens, sz);
-    free(tokens);
-
-    return 0;
 }
