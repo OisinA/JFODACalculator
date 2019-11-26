@@ -3,6 +3,8 @@
 // Tests for the tokenizer component.
 // These tests include the testing of the correct reading of the input file,
 // as well as the correct tokenizing of the arithmetical expression.
+// They check for expressions without whitespace also, as well as
+// expressions with extraneous whitespace.
 
 #include <ctap.h>
 #include "token_readwrite.h"
@@ -65,13 +67,13 @@ TESTS {
         Result result6 = tokenize(expr6);
         ok( token_array_is_equal(correct_tokens, result6.tokens, sizeof(correct_tokens), result6.token_num) == 0, "Token arrays are equal. Input contains illegal chars.");
 
-        // Eight test using extraneous white space
+        // Seventh test using extraneous white space
         char* expr7 = "      (1.3 + 4.5 * 7) - 2 ";
         Result result7 = tokenize(expr7);
         Token *tokens7 = result7.tokens;
         ok( token_array_is_equal(correct_tokens, tokens7, sizeof(correct_tokens), result7.token_num) == 0, "Token arrays are equal. Input contains extraneous whitespace.");
 
-        // Ninth test using illegal characters, extraneous whitespace, and all token types.
+        // Eighth test using illegal characters, extraneous whitespace, and all token types.
         char* expr8 = "    (1 + 2.5 - 3 * 1.2 /   4 + 3) ^ 2    ;";
         Token correct_tokens8[] = {{"(", 3}, {"1", 0}, {"+", 2}, {"2.5", 1}, {"-", 2}, {"3", 0}, {"*", 2}, {"1.2", 1}, {"/", 2},
                                   {"4", 0}, {"+", 2}, {"3", 0}, {")", 4}, {"^", 2}, {"2", 0}};
