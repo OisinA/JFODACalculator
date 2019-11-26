@@ -5,14 +5,24 @@ and their types, and exports these tokens by writing them to an array in a file.
 
 ## Running
 
-To run the tokenizer, an input file called `test.txt` is required,
+To run the tokenizer, an input file called `input.txt` is required,
 which contains an arithmetical expression on the first line.
-The input file has been included in this directory.
+The input file has been included in this directory, but if it does
+not exist on the user's machine, an input file is created.
 
 Then to compile the code: `gcc main.c`
 
 To execute: `./a.out`
 
-### Output
+#### Output
 Output: Tokens are added to an array as they are identified. This array
 is then written to a binary file called `tokens.bin`.
+
+#### Run Tests
+To run tests, make sure you have CTAP installed and then run:
+
+`gcc -o test.t tests.c tokenizer.c io.c token_readwrite.c`
+
+Then:
+
+`prove ./*.t`
