@@ -19,6 +19,9 @@ Token token;
 
 const char *TokenNames[] = {"INTEGER", "FLOAT", "OPERATOR", "LPAREN", "RPAREN"};
 
+// Tokenizes an arithmetical expression.
+// returns a Result struct containing an array of tokens and
+// the num of tokens in the array.
 Result tokenize(char *expr) {
   Token *tokens = malloc(sizeof(Token) * 100);
 
@@ -29,13 +32,16 @@ Result tokenize(char *expr) {
   // Iterate over every char in the string
   while (i < str_len) {
 
+    // initialize an array of numbers.
     char nums[128] = { 0 };
+
+    // get the current character in the expression.
     char c = expr[i];
 
     // check if it's a number
     if (isdigit(c)) {
       token.tokenType = INTEGER;
-      size_t m = 0;
+      size_t num_i = 0;
 
       while (isdigit(expr[i]) || expr[i] == '.') {
         if (expr[i] == '.') {
@@ -44,10 +50,10 @@ Result tokenize(char *expr) {
         c = expr[i];
 
         // append the char to the nums array
-        nums[m] = c;
+        nums[num_i] = c;
 
         i++;
-        m++;
+        num_i++;
       };
 
       i--;
@@ -98,7 +104,7 @@ Result tokenize(char *expr) {
   return result;
 }
 
-// Append the token to the Tokens array.
+// Append the token to the tokens array.
 void exportToken(Token *tokens) {
 
   printf("EXPORTED TOKEN -> %s %s\n", token.val, TokenNames[token.tokenType]);
@@ -108,7 +114,8 @@ void exportToken(Token *tokens) {
 }
 
 // Check if a character is an operator.
-// returns: 1 if an operator, 0 if not.
+// An operator is either one of the following: + - / *
+// returns an int; 1 if true, 0 if false.
 int isoperator(char c) {
   if (c == '+' || c == '-' || c == '/' || c == '*' || c == '^') {
     return 1;
@@ -135,4 +142,9 @@ int token_array_is_equal(Token *array_one, Token *array_two,
   }
   return is_equal;
 
+}
+
+// Free the memory associated with the token array.
+void freeTokens(Result result) {
+  free(result.tokens);
 }

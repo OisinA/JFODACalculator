@@ -21,13 +21,12 @@ int main(int argc, char **argv) {
     return -1;
   }
 
-  // Tokenize the expression
+  // Tokenize the arithmetical expression
   Result result = tokenize(expr);
-
-  Token correct_tokens[] = {{"(", 3}, {"1.3", 1}, {"+", 2}, {"4.5", 1}, {"*", 2}, {"7", 0}, {")", 4}, {"-", 2}, {"2", 0}};
-
-  // Tokenize the expression
 
   // Write the token array to a file.
   writeTokensToFile(result.tokens, result.token_num);
+
+  // Free the memory associated with the tokens.
+  freeTokens(result);
 }

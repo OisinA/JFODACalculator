@@ -7,6 +7,8 @@
 #include "io.h"
 #include "token.h"
 
+// Read an input file called test.txt into an array of characters
+// whose pointer is returned.
 char * readFile() {
   // Create a file pointer
   FILE *fp;
@@ -24,7 +26,7 @@ char * readFile() {
   }
 
   // File exists, get the first line
-  if( fgets (expr, 60, fp) == NULL ) {
+  if( fgets (expr, 100, fp) == NULL ) {
     puts("No numbers found.");
   }
 
@@ -33,7 +35,7 @@ char * readFile() {
   return expr;
 }
 
+// Free the memory associated with the array of chars.
 void closeFile(char* fileStr) {
-  // Free the memory associated with the array of chars
   free(fileStr);
 }
