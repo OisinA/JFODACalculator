@@ -27,7 +27,7 @@ int writeTokensToFile(Token tokens[], int token_num) {
 
     fwrite(tokens, sizeof(Token) * token_num, 1, data);
     fclose(data);
-    printTokenArray();
+
     return 0;
 }
 

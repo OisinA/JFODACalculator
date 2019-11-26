@@ -7,5 +7,6 @@
 
 char * readFile();
 void closeFile(char*);
+int createInputFile();
 
 #endif

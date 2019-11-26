@@ -100,6 +100,7 @@ Result tokenize(char *expr) {
 
   // Write the array of tokens to a file.
   Result result = { tokens, tokens_i};
+  tokens_i = 0;
 
   return result;
 }
@@ -125,21 +126,30 @@ int isoperator(char c) {
 
 // Check if two token arrays are equal.
 int token_array_is_equal(Token *array_one, Token *array_two,
-                    const size_t elem_size, const size_t elem_count) {
+  const size_t array_one_size, const size_t array_two_elems) {
+
+  int array_one_elems = array_one_size / sizeof(Token);
+
   int is_equal = 0;
 
-  for (int i = 0; i < elem_count; i++) {
-    Token token1 = array_one[i];
-    Token token2 = array_two[i];
-    printf("\nToken1: Val -> %sToken2: Val -> %s", token1.val, token2.val);
-    printf("\nToken1: Type -> %dToken2: Type -> %d", token1.tokenType, token2.tokenType);
+  if (array_one_elems != array_two_elems) {
+    is_equal = 1;
+  }
+  else {
 
-    if (strcmp(token1.val, token2.val) != 0 || token1.tokenType != token2.tokenType) {
-      is_equal = 1;
-      break;
+      // check that both arrays have the same length
+
+      for (int i = 0; i < array_one_elems; i++) {
+        Token token1 = array_one[i];
+        Token token2 = array_two[i];
+
+        if (strcmp(token1.val, token2.val) != 0 || token1.tokenType != token2.tokenType) {
+          is_equal = 1;
+          break;
+        }
+      }
     }
 
-  }
   return is_equal;
 
 }
