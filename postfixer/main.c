@@ -1,3 +1,8 @@
+// postfixer
+// Author: Michael Forde
+// Student Number: 117392626
+// Extra: DSS, I have a spelling and grammer waver
+
 #include <stdlib.h>
 #include "../tokenizer/token.h"
 #include "postfix.h"

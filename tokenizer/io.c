@@ -7,6 +7,8 @@
 #include "io.h"
 #include "token.h"
 
+// Read an input file called test.txt into an array of characters
+// whose pointer is returned.
 char * readFile() {
   // Create a file pointer
   FILE *fp;
@@ -15,16 +17,18 @@ char * readFile() {
   char* expr = (char*)malloc(sizeof(char)*255);
 
   // Open the file called test.txt
-  fp = fopen("test.txt" , "r");
+  fp = fopen("input.txt" , "r");
 
   // If the file does not exist, an error should be generated.
   if(fp == NULL) {
-    perror("Error: Could not open the file.");
-    return NULL;
+    perror("input.txt not found. Creating file input.txt instead...");
+
+    createInputFile();
+    fp = fopen("input.txt" , "r");
   }
 
   // File exists, get the first line
-  if( fgets (expr, 60, fp) == NULL ) {
+  if( fgets (expr, 100, fp) == NULL ) {
     puts("No numbers found.");
   }
 
@@ -33,7 +37,16 @@ char * readFile() {
   return expr;
 }
 
+// Free the memory associated with the array of chars.
 void closeFile(char* fileStr) {
-  // Free the memory associated with the array of chars
   free(fileStr);
+}
+
+int createInputFile() {
+  FILE *fp;
+  fp = fopen("input.txt", "w");
+
+  fprintf(fp, "%s", "(1.3 + 4.5 * 7 ) - 2");
+  fclose(fp);
+  return 0;
 }

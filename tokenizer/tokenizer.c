@@ -19,7 +19,10 @@ Token token;
 
 const char *TokenNames[] = {"INTEGER", "FLOAT", "OPERATOR", "LPAREN", "RPAREN"};
 
-Token *tokenize(char *expr) {
+// Tokenizes an arithmetical expression.
+// returns a Result struct containing an array of tokens and
+// the num of tokens in the array.
+Result tokenize(char *expr) {
   Token *tokens = malloc(sizeof(Token) * 100);
 
   size_t i = 0;
@@ -29,13 +32,16 @@ Token *tokenize(char *expr) {
   // Iterate over every char in the string
   while (i < str_len) {
 
+    // initialize an array of numbers.
     char nums[128] = { 0 };
+
+    // get the current character in the expression.
     char c = expr[i];
 
     // check if it's a number
     if (isdigit(c)) {
       token.tokenType = INTEGER;
-      size_t m = 0;
+      size_t num_i = 0;
 
       while (isdigit(expr[i]) || expr[i] == '.') {
         if (expr[i] == '.') {
@@ -44,10 +50,10 @@ Token *tokenize(char *expr) {
         c = expr[i];
 
         // append the char to the nums array
-        nums[m] = c;
+        nums[num_i] = c;
 
         i++;
-        m++;
+        num_i++;
       };
 
       i--;
@@ -93,9 +99,13 @@ Token *tokenize(char *expr) {
   }
 
   // Write the array of tokens to a file.
-  writeTokensToFile(tokens, tokens_i);
+  Result result = { tokens, tokens_i};
+  tokens_i = 0;
+
+  return result;
 }
 
+// Append the token to the tokens array.
 void exportToken(Token *tokens) {
 
   printf("EXPORTED TOKEN -> %s %s\n", token.val, TokenNames[token.tokenType]);
@@ -104,9 +114,47 @@ void exportToken(Token *tokens) {
   tokens_i += 1;
 }
 
+// Check if a character is an operator.
+// An operator is either one of the following: + - / *
+// returns an int; 1 if true, 0 if false.
 int isoperator(char c) {
   if (c == '+' || c == '-' || c == '/' || c == '*' || c == '^') {
     return 1;
   }
   return 0;
+}
+
+// Check if two token arrays are equal.
+int token_array_is_equal(Token *array_one, Token *array_two,
+  const size_t array_one_size, const size_t array_two_elems) {
+
+  int array_one_elems = array_one_size / sizeof(Token);
+
+  int is_equal = 0;
+
+  if (array_one_elems != array_two_elems) {
+    is_equal = 1;
+  }
+  else {
+
+      // check that both arrays have the same length
+
+      for (int i = 0; i < array_one_elems; i++) {
+        Token token1 = array_one[i];
+        Token token2 = array_two[i];
+
+        if (strcmp(token1.val, token2.val) != 0 || token1.tokenType != token2.tokenType) {
+          is_equal = 1;
+          break;
+        }
+      }
+    }
+
+  return is_equal;
+
+}
+
+// Free the memory associated with the token array.
+void freeTokens(Result result) {
+  free(result.tokens);
 }

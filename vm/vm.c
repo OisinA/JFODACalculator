@@ -25,7 +25,7 @@ Data executeInstructions(char instructions[], int size);
     break;\
   case DIV:\
     if (x == 0) {\
-      printf("Error, divide by 0");\
+      printf("Error, divide by 0\n");\
       exit(1);\
     }\
     z = y / x;\

@@ -22,6 +22,9 @@ TOKENIZERSRCS := $(filter-out tokenizer/tests.c, $(wildcard tokenizer/*.c))
 tokenizer.o: ${TOKENIZERSRCS}
 	${CC} $^ -o $@
 
+tokenizertest.t: tokenizer/tests.c tokenizer/io.c tokenizer/token_readwrite.c tokenizer/tokenizer.c
+	${CC} $^ -o $@
+
 POSTFIXERSRCS := $(filter-out postfixer/tests.c, $(wildcard postfixer/*.c))
 
 postfixer.o: ${POSTFIXERSRCS}
