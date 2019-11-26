@@ -136,4 +136,20 @@ TESTS {
             ok(instructions[i] == expected_output[i], "%d: float/int instructions as expected %d %d", i, instructions[i], expected_output[i]);
         }
     }
+
+    // Test toFloat function for strings
+    subtest {
+        char* s = "15.2";
+        float f = toFloat(s);
+
+        ok(f == 15.2f, "toFloat function %f", f);
+    }
+
+    // Test toInt function for strings
+    subtest {
+        char* s = "15";
+        int f = toInt(s);
+
+        ok(f == 15, "toInt function %f", f);
+    }
 }
