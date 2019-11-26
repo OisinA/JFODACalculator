@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "../tokenizer/token.h"
-#include "postfix.c"
+#include "postfix.h"
+#include <stdio.h>
 
 
 // main function
@@ -12,7 +13,7 @@ int main() {
     int sz = ftell(readFile) / sizeof(Token);
     rewind(readFile);
     Token* tokens = (Token*)malloc(sizeof(Token)*sz);
-    fread(tokens, sizeof(Token), sizeof(tokens), readFile);
+    fread(tokens, sizeof(Token), sz, readFile);
     fclose(readFile);
     infix_to_postfix(tokens, sz);
     free(tokens);

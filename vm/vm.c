@@ -106,7 +106,6 @@ Data executeInstructions(char instructions[], int size) {
       case DIV:
       case EXP:
         stack = operate(instructions[i], stack);
-        printf("%d", top(stack).value);
         break;
       default:
         printf("Error, unrecognized instruction %d\n", instructions[i]);
