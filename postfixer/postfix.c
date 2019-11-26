@@ -87,7 +87,10 @@ int operator(Token token) {
 	if (token.val == "*" || token.val == "/") {
 		return 2;
 	}
-
+  if (token.val == "^") {
+		return 3;
+	}
+  
 	return -1;
 }
 

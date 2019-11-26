@@ -1,3 +1,10 @@
+// Infix to Postfix converter
+// Author: Michael Forde
+// Student Number: 117392626
+// Extra: DSS, I have a spelling and grammer waver
+
+#include "../tokenizer/token.h"
+
 #ifndef __POSTFIX__
 #define __POSTFIX__
 
