@@ -25,7 +25,7 @@ Data executeInstructions(char instructions[], int size);
     break;\
   case DIV:\
     if (x == 0) {\
-      printf("Error, divide by 0");\
+      printf("Error, divide by 0\n");\
       exit(1);\
     }\
     z = y / x;\
@@ -106,7 +106,6 @@ Data executeInstructions(char instructions[], int size) {
       case DIV:
       case EXP:
         stack = operate(instructions[i], stack);
-        printf("%d", top(stack).value);
         break;
       default:
         printf("Error, unrecognized instruction %d\n", instructions[i]);
