@@ -1,2 +1,6 @@
 sample
 *.out
+
+*.o
+*.t
+*.bin
