@@ -1,60 +1,65 @@
-#include <limits.h> 
-#include <stdio.h> 
+// Infix to Postfix converter
+// Author: Michael Forde
+// Student Number: 117392626
+// Extra: DSS, I have a spelling and grammer waver
+
+#include <limits.h>
+#include <stdio.h>
 #include <stdlib.h>
 // local libs
 #include "../tokenizer/token.h"
 #include "../tokenizer/token_readwrite.h"
+#include "postfix.h"
 
-
-// A structure to represent a stack 
-struct StackNode { 
-    Token token; 
-    struct StackNode* next; 
-};
-
+// null token to be outputed if no items in stack
 Token null_token;
 
-struct StackNode* new_node(Token token) 
-{ 
+// node for stack
+struct StackNode* new_node(Token token)
+{
     struct StackNode* stack_node = (struct StackNode*)malloc(sizeof(struct StackNode));
     stack_node->token = token;
     stack_node->next = NULL;
     return stack_node;
-} 
+}
 
-int is_empty(struct StackNode* root) 
-{ 
-    return !root; 
-} 
-  
-void push(struct StackNode** root, Token token) 
-{ 
-    struct StackNode* stack_node = new_node(token); 
-    stack_node->next = *root; 
+// check if stack is empty
+int is_empty(struct StackNode* root)
+{
+    return !root;
+}
+
+// pushes an item to the stack
+void push(struct StackNode** root, Token token)
+{
+    struct StackNode* stack_node = new_node(token);
+    stack_node->next = *root;
     *root = stack_node;
-} 
-  
-Token pop(struct StackNode** root) 
-{ 
+}
+
+// pops an iem from the top of the stack
+Token pop(struct StackNode** root)
+{
     if (is_empty(*root))
-        return null_token; 
-    struct StackNode* temp = *root; 
-    *root = (*root)->next; 
-    Token popped = temp->token; 
-    free(temp); 
-  
+        return null_token;
+    struct StackNode* temp = *root;
+    *root = (*root)->next;
+    Token popped = temp->token;
+    free(temp);
+
     return popped;
 }
 
-Token peek(struct StackNode* root) 
-{ 
+// also you check the item in the top of the list
+Token peek(struct StackNode* root)
+{
     if (is_empty(root))
         return null_token;
-    return root->token; 
-} 
+    return root->token;
+}
 
 
-// check if the given character is operand
+// check if the given token is operand
 int is_operand(Token token) {
 
 	if (token.tokenType == INTEGER || token.tokenType == FLOAT){
@@ -63,7 +68,7 @@ int is_operand(Token token) {
 	return 0;
 }
 
-
+// check if the given token is a operator
 int is_operator(Token token) {
 
 	if (token.tokenType == OPERATOR) {
@@ -82,25 +87,31 @@ int operator(Token token) {
 	if (token.val == "*" || token.val == "/") {
 		return 2;
 	}
-
+  if (token.val == "^") {
+		return 3;
+	}
+  
 	return -1;
 }
 
 
-// converts infix to postfix
+// converts postfix tokens from an array of infix tokens
 int infix_to_postfix(Token* tokens, int size) {
+	// initializing some variables
 	int i, k;
-
 	Token x;
+
+  Token out[size];
 
 	// creates a stack
 	struct StackNode* stack = NULL;
 
+	// loop through all the tokens individually
 	for (i = 0, k = -1; i < size; ++i) {
-
+    printf("%s:%i\n", tokens[i].val, tokens[i].tokenType);
 		// if the token is an operand, add it to output.
 		if (is_operand(tokens[i])) {
-			tokens[++k] = tokens[i];
+			out[++k] = tokens[i];
 		}
 
 		// if the token is an ‘(‘, push it to the stack.
@@ -108,21 +119,25 @@ int infix_to_postfix(Token* tokens, int size) {
 			push(&stack, tokens[i]);
 		}
 
+		// if the token is an operator pop the stack until
 		else if (is_operator(tokens[i])) {
 			x = pop(&stack);
 			while (is_operator(x) && operator(x) >= operator(tokens[i])) {
-				tokens[++k] = x;
+        if(strcmp(x.val, "") != 0){
+				  out[++k] = x;
+        }
 				x = pop(&stack);
 			}
 			push(&stack, x);
 			push(&stack, tokens[i]);
 		}
+
 		// if the token is an ‘)’, pop and output from the stack
 		// until an ‘(‘ is encountered.
 		else if (tokens[i].tokenType == RPAREN) {
 			x = pop(&stack);
-			while (x.tokenType != LPAREN) {
-				tokens[++k] = x;
+      while (x.tokenType != LPAREN) {
+  		  out[++k] = x;
 				x = pop(&stack);
 			}
 		}
@@ -131,35 +146,19 @@ int infix_to_postfix(Token* tokens, int size) {
 		}
 
 	}
-
+  if(is_empty(stack)) {
+    k++;
+  }
 	// pop all the operators from the stackW
 	while (!is_empty(stack)) {
 		x = pop(&stack);
-		tokens[++k] = x;
+		out[++k] = x;
 	}
-	for (int j = 0; j < size; j++) {
-      Token token = tokens[j];
+
+	// write the output to a file
+	writeTokensToFile(out, k);
+  for (int j = 0; j < k; j++) {
+      Token token = out[j];
       printf("\n### OUPUT VAL ###: VAL: %s TOKEN TYPE: %d\n", token.val, token.tokenType);
     }
-}
-
-
-// main function for testing
-int main() {
-	FILE *readFile = fopen("tokens.bin", "rb");
-    fseek(readFile, 0L, SEEK_END);
-    int sz = ftell(readFile) / sizeof(Token);
-    fseek(readFile, 0L, SEEK_SET);
-    Token* tokens = (Token*)malloc(sizeof(Token)*sz);
-    fread(tokens, sizeof(Token), sizeof(tokens), readFile);
-    fclose(readFile);
-    remove("output");
-
-    infix_to_postfix(tokens, 10);
-
-    free(tokens);
-
-    return 0;
-	// Token infix = testReadingOfTokens()
-	// infix_to_postfix(infix);
 }
