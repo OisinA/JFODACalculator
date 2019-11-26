@@ -30,6 +30,8 @@ POSTFIXERSRCS := $(filter-out postfixer/tests.c, $(wildcard postfixer/*.c))
 postfixer.o: ${POSTFIXERSRCS}
 	${CC} $^ -o $@
 
+postfixertest.t: postfixer/tests.c tokenizer/token_readwrite.c postfixer/postfix.c
+
 GENERATORSRCS := $(filter-out generator/tests.c, $(wildcard generator/*.c))
 
 generator.o: ${GENERATORSRCS}
