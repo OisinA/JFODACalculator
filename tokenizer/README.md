@@ -10,19 +10,8 @@ which contains an arithmetical expression on the first line.
 The input file has been included in this directory, but if it does
 not exist on the user's machine, an input file is created.
 
-Then to compile the code: `gcc main.c`
-
-To execute: `./a.out`
+To run the Tokenizer, run `./tokenizer.o`
 
 #### Output
 Output: Tokens are added to an array as they are identified. This array
 is then written to a binary file called `tokens.bin`.
-
-#### Run Tests
-To run tests, make sure you have CTAP installed and then run:
-
-`gcc -o test.t tests.c tokenizer.c io.c token_readwrite.c`
-
-Then:
-
-`prove ./*.t`
