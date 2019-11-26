@@ -25,6 +25,7 @@ TESTS {
     Result result1 = tokenize(expr1);
     Token *tokens1 = result1.tokens;
     ok( token_array_is_equal(correct_tokens, result1.tokens, sizeof(correct_tokens), result1.token_num) == 0, "Both token arrays are equal. Input contains operators, parens, ints and floats.");
+    freeTokens(result1);
 
     // Test all operators, and include both integers and floating point numbers
     char* expr2 = "1 + 2.5 - 3 * 9 / 4.3 ^ 2";
@@ -32,6 +33,7 @@ TESTS {
     Result result2 = tokenize(expr2);
     Token *tokens2 = result2.tokens;
     ok( token_array_is_equal(correct_tokens2, result2.tokens, sizeof(correct_tokens2), result2.token_num) == 0, "Both token arrays are equal. Input contains operators, parens, ints, floats, and the exponent operator.");
+    freeTokens(result2);
 
     // Third test which contains ints, float numbers, operators, and left and right brackets
     char* expr3 = "(1 + 2.5) - (3 * 10)";
@@ -39,6 +41,7 @@ TESTS {
     Result result3 = tokenize(expr3);
     Token *tokens3 = result3.tokens;
     ok( token_array_is_equal(correct_tokens3, result3.tokens, sizeof(correct_tokens3), result3.token_num) == 0, "Both token arrays are equal. Input contains ints, floats, operators, and parens.");
+    freeTokens(result3);
 
     // Fourth test containing all possible token types.
     char* expr4 = "(1 + 2.5 - 3 * 1.2 / 4 + 3) ^ 2";
@@ -47,6 +50,7 @@ TESTS {
     Result result4 = tokenize(expr4);
     Token *tokens4 = result4.tokens;
     ok( token_array_is_equal(correct_tokens4, result4.tokens, sizeof(correct_tokens4), result4.token_num) == 0, "Both token arrays are equal. Input contains all token types.");
+    freeTokens(result4);
 
     // Fifth test with no whitespace, and containing integers and operators.
     char* expr5 = "(1+2)-(5*3)";
@@ -54,6 +58,7 @@ TESTS {
     Result result5 = tokenize(expr5);
     Token *tokens5 = result5.tokens;
     ok( token_array_is_equal(correct_tokens5, result5.tokens, sizeof(correct_tokens5), result5.token_num) == 0, "Both token arrays are equal. Input contains all token types.");
+    freeTokens(result5);
 
 
   }
@@ -66,12 +71,14 @@ TESTS {
         strtok(expr6, "\n");
         Result result6 = tokenize(expr6);
         ok( token_array_is_equal(correct_tokens, result6.tokens, sizeof(correct_tokens), result6.token_num) == 0, "Token arrays are equal. Input contains illegal chars.");
+        freeTokens(result6);
 
         // Seventh test using extraneous white space
         char* expr7 = "      (1.3 + 4.5 * 7) - 2 ";
         Result result7 = tokenize(expr7);
         Token *tokens7 = result7.tokens;
         ok( token_array_is_equal(correct_tokens, tokens7, sizeof(correct_tokens), result7.token_num) == 0, "Token arrays are equal. Input contains extraneous whitespace.");
+        freeTokens(result7);
 
         // Eighth test using illegal characters, extraneous whitespace, and all token types.
         char* expr8 = "    (1 + 2.5 - 3 * 1.2 /   4 + 3) ^ 2    ;";
@@ -80,6 +87,7 @@ TESTS {
         Result result8 = tokenize(expr8);
         Token *tokens8 = result8.tokens;
         ok( token_array_is_equal(correct_tokens8, tokens8, sizeof(correct_tokens8), result8.token_num) == 0, "Token arrays are equal. Input contains extraneous whitespace, illegal chars, and all token types.");
+        freeTokens(result8);
 
 
   }
