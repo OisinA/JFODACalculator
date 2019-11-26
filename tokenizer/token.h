@@ -1,3 +1,7 @@
+// Header file for token and result structs, as well as TokenType enum
+// Author Name: Silvia O'Dwyer
+// Author Student Number: 117333306
+
 #include <stddef.h>
 
 #ifndef __TOKEN_H__
