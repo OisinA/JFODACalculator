@@ -7,7 +7,6 @@
 #include "../isa/isa.h"
 
 void print(char* string);
-void _emit(char byte);
 void emit(char byte[], int size);
 int toInt(char* string);
 float toFloat(char* string);
